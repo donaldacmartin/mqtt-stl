@@ -11,9 +11,13 @@ paho-mqtt = "^1.6.1"
 orjson = "^3.6.6"
 
 [tool.poetry.dev-dependencies]
-pytest = "^5.2"
-black = "^21.12b0"
+pytest = "^7.0.1"
+black = "^22.1"
 pylint = "^2.12.2"
+typed-ast = "^1.5.2"
+pytest-cov = "^3.0.0"
+importlib-metadata = "^4.10.1"
+typing-extensions = "^4.0.1"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]

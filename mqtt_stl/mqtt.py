@@ -5,34 +5,35 @@ The interface to the MQTT service
 Functions:
     send_update(List[Route], MQTTConfig) -> None
 """
-from dataclasses import asdict
+
+from logging import warning
 from typing import List
 
-from orjson import dumps
+from paho.mqtt import MQTTException
 from paho.mqtt.client import MQTTv31
 from paho.mqtt.publish import single
 
 from .model import MQTTConfig, Route
-
-
-def _to_payload(routes: List[Route]) -> str:
-    dicts = [asdict(route) for route in routes]
-    return dumps(dicts, default=str)
+from .transform import routes_to_json
 
 
 def send_update(routes: List[Route], config: MQTTConfig) -> None:
     """Publish an update to the MQTT consumer"""
-    auth = (
-        {"username": config.username, "password": config.password}
-        if config.username
-        else None
-    )
 
-    single(
-        topic=config.topic,
-        payload=_to_payload(routes),
-        hostname=config.host,
-        port=config.port,
-        auth=auth,
-        protocol=MQTTv31,
-    )
+    try:
+        auth = (
+            {"username": config.username, "password": config.password}
+            if config.username
+            else None
+        )
+
+        single(
+            topic=config.topic,
+            payload=routes_to_json(routes),
+            hostname=config.host,
+            port=config.port,
+            auth=auth,
+            protocol=MQTTv31,
+        )
+    except MQTTException as mqtt_exception:
+        warning(f"Error publishing message: {mqtt_exception}")

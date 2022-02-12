@@ -3,13 +3,19 @@
 Providing structure to the rest of the application.
 
 Classes:
+    MQTTSTLException
     MQTTConfig
     Config
     Route
 """
+
 from dataclasses import dataclass
 from datetime import datetime
 from typing import List, Optional
+
+
+class MQTTSTLException(Exception):
+    """Exception wrapper for the app"""
 
 
 @dataclass
@@ -38,4 +44,4 @@ class Route:
 
     tag: str
     title: str
-    depatures: List[datetime]
+    departures: List[datetime]
